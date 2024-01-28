@@ -7,6 +7,7 @@ PROGRAM_NAME = mohawk
 PROGRAM = $(PROGRAM_DIR)$(PROGRAM_NAME)
 OBJ += \
 	apk/pixel_format.cpp \
+	apk/stream.cpp \
 	mohawk/main.cpp \
 	mohawk/bitmap.cpp
 
