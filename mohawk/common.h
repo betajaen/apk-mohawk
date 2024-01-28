@@ -19,5 +19,26 @@
  *
  */
 
-#include "mohawk/bitmap.h"
+#ifndef MOHAWK_COMMON_H
+#define MOHAWK_COMMON_H
 
+#include "apk/pod.h"
+
+namespace Mohawk {
+
+    typedef apk::uint   uint;
+    typedef apk::uint8  uint8;
+    typedef apk::uint16 uint16;
+    typedef apk::uint32 uint32;
+    typedef apk::int8   int8;
+    typedef apk::int16  int16;
+    typedef apk::int32  int32;
+
+    typedef APK_SIZE_TYPE   usize;
+    typedef APK_SSIZE_TYPE  isize;
+
+    typedef apk::byte byte;
+
+}
+
+#endif

@@ -7,7 +7,8 @@ PROGRAM_NAME = mohawk
 PROGRAM = $(PROGRAM_DIR)$(PROGRAM_NAME)
 OBJ += \
 	apk/pixel_format.cpp \
-	mohawk/main.cpp
+	mohawk/main.cpp \
+	mohawk/bitmap.cpp
 
 
 CXXFLAGS := -I. -D__AMIGADATE__="\"$(DATESTR)\""

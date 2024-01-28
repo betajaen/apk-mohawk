@@ -19,21 +19,29 @@
  *
  */
 
-#ifndef ENGINE_COMMON_H
-#define ENGINE_COMMON_H
+#ifndef ENGINE_SURFACE_H
+#define ENGINE_SURFACE_H
 
-#include <apk/apk.h>
+#include "apk/apk.h"
 
-using apk::uint;
-using apk::uint8;
-using apk::uint16;
-using apk::uint32;
-using apk::int8;
-using apk::int16;
-using apk::int32;
+namespace Graphics {
 
-typedef APK_SIZE_TYPE usize;
-typedef APK_SSIZE_TYPE isize;
+    class Surface {
+        apk::Bitmap* bitmap;
 
+        Surface() {
+            bitmap = nullptr;
+        }
+        ~Surface() {
+            if (bitmap) {
+                apk_delete(bitmap);
+            }
+        }
+
+        apk_no_copy_move(Surface);
+
+    };
+
+}
 
 #endif
