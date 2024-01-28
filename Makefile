@@ -5,21 +5,43 @@ PLATFORM = sdl2
 PROGRAM_DIR = ./install/
 PROGRAM_NAME = mohawk
 PROGRAM = $(PROGRAM_DIR)$(PROGRAM_NAME)
+OBJ += \
+	apk/pixel_format.cpp \
+	mohawk/main.cpp
+
 
 CXXFLAGS := -I. -D__AMIGADATE__="\"$(DATESTR)\""
 LDFLAGS  :=
 
-SDL2_RUN     := (cd $(PROGRAM_DIR) && $(PROGRAM_NAME))
+SDL2_OBJ		:= \
+                   apk/sdl2/main.cpp \
+                   apk/sdl2/bank.cpp \
+                   apk/sdl2/bitmap.cpp \
+                   apk/sdl2/compat.cpp \
+                   apk/sdl2/file.cpp \
+                   apk/sdl2/gfx.cpp \
+                   apk/sdl2/memory.cpp \
+                   apk/sdl2/requester.cpp \
+                   apk/sdl2/ext/tinyfiledialogs.cpp
 
-ifeq ($(PLATFORM), sdl2)
-	OBJ		 := apk/sdl2/main.cpp apk/sdl2/gfx.cpp apk/sdl2/memory.cpp apk/sdl2/bank.cpp apk/sdl2/file.cpp apk/sdl2/compat.cpp apk/sdl2/requester.cpp apk/sdl2/ext/tinyfiledialogs.cpp
-	CC		 := gcc
-	DELETE	 := rm -f
-	CXXFLAGS += -gdwarf-2 -lSDL2 -I/opt/homebrew/include -L/opt/homebrew/lib -std=c++17 -fno-exceptions -fno-rtti -fno-threadsafe-statics
-	LDFLAGS  :=
-endif
+SDL2_CC			:= gcc
+SDL2_DELETE		:= rm -f
+SDL2_CXXFLAGS	+= -gdwarf-2 -std=c++17 -fno-exceptions -fno-rtti -fno-threadsafe-statics -DAPK_IS_SDL2
+SDL2_LDFLAGS 	:=
+SDL2_RUN		:= (cd $(PROGRAM_DIR) && $(PROGRAM_NAME))
 
-AMIGA_OBJ       := apk/amiga/entry.cpp apk/amiga/compat.cpp apk/amiga/main.cpp apk/amiga/memory.cpp apk/amiga/bank.cpp apk/amiga/debug.cpp apk/amiga/file.cpp apk/amiga/requester.cpp apk/amiga/window.cpp apk/amiga/screen.cpp
+AMIGA_OBJ       := \
+                   apk/amiga/main.cpp \
+                   apk/amiga/bank.cpp \
+                   apk/amiga/compat.cpp \
+                   apk/amiga/debug.cpp \
+                   apk/amiga/entry.cpp \
+                   apk/amiga/file.cpp \
+                   apk/amiga/memory.cpp \
+                   apk/amiga/requester.cpp \
+                   apk/amiga/screen.cpp \
+                   apk/amiga/window.cpp
+
 AMIGA_CC		:= /opt/amiga/bin/m68k-amigaos-gcc
 AMIGA_DELETE	:= rm -f
 AMIGA_CXXFLAGS  := -g -std=c++17 -m68020 -Wall -noixemul -fno-exceptions -fno-rtti -fno-threadsafe-statics
@@ -48,26 +70,34 @@ AMIGA_RUN 		:= 	fs-uae \
 					--window_height=1024 \
 					--scale=2
 
-ifeq ($(PLATFORM), rtg)
-	OBJ		  += $(AMIGA_OBJ)
-	OBJ       += apk/amiga/gfx_rtg.cpp
-	CC		  := $(AMIGA_CC)
-	DELETE	  := $(AMIGA_DELETE)
-	CXXFLAGS  += $(AMIGA_CXXFLAGS)
-	LDFLAGS   := $(AMIGA_LDFLAGS)
+ifeq ($(PLATFORM),aga)
+  OBJ		  += $(AMIGA_OBJ)
+  CC		  := $(AMIGA_CC)
+  DELETE	  := $(AMIGA_DELETE)
+  CXXFLAGS    += $(AMIGA_CXXFLAGS) apk/amiga/gfx_aga.cpp -DAPK_IS_AGA
+  LDFLAGS     := $(AMIGA_LDFLAGS)
+else ifeq ($(PLATFORM),rtg)
+  OBJ		  += $(AMIGA_OBJ)
+  CC		  := $(AMIGA_CC)
+  DELETE	  := $(AMIGA_DELETE)
+  CXXFLAGS  += $(AMIGA_CXXFLAGS) apk/amiga/gfx_rtg.cpp -DAPK_IS_RTG
+  LDFLAGS   := $(AMIGA_LDFLAGS)
+else ifeq ($(PLATFORM),sdl2)
+  OBJ		  += $(SDL2_OBJ)
+  CC		  := $(SDL2_CC)
+  DELETE	  := $(SDL2_DELETE)
+  CXXFLAGS  += $(SDL2_CXXFLAGS)
+  LDFLAGS   := $(SDL2_LDFLAGS)
+  UNAME_S := $(shell uname -s)
+ 
+  ifeq ($(UNAME_S),Darwin)
+    CXXFLAGS += -lSDL2 -I/opt/homebrew/include -L/opt/homebrew/lib
+  else
+    $(error Unknown SDL2 platform $(UNAME_S))
+  endif
+else
+  $(error Invalid PLATFORM value. PLATFORM must be rtg, aga, or sdl2)
 endif
-
-ifeq ($(PLATFORM), aga)
-	OBJ		  += $(AMIGA_OBJ)
-	OBJ       += apk/amiga/gfx_aga.cpp
-	CC		  := $(AMIGA_CC)
-	DELETE	  := $(AMIGA_DELETE)
-	CXXFLAGS  += $(AMIGA_CXXFLAGS)
-	LDFLAGS   := $(AMIGA_LDFLAGS)
-endif
-
-OBJ += \
-	mohawk/main.cpp
 
 all: $(PROGRAM)
 
