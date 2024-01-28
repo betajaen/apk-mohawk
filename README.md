@@ -40,7 +40,9 @@ The following files must be placed in the same drawer as the executable, which c
 
 ### Ports
   * [ ] Amiga OS 3.x on 68k
-  * [ ] SDL2
+  * [ ] SDL2 for MacOS
+  * [ ] SDL2 for Windows
+  * [ ] SDL2 for Linux
 
 ### Enhancements
   * [ ] Controls
@@ -54,11 +56,19 @@ The following files must be placed in the same drawer as the executable, which c
 
 ## State of the Game and Observations
 
-### Amiga
+### Amiga for AmigaOS 3 (68K)
 
 * Port has not been started.
 
-### SDL2
+### SDL2 for MacOS
+
+* Port has not been started.
+
+### SDL2 for Windows
+
+* Port has not been started.
+
+### SDL2 for Linux
 
 * Port has not been started.
 
